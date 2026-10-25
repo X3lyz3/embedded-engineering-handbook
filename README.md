@@ -104,6 +104,31 @@ stateDiagram-v2
 
 ---
 
+### ⚠️ MCU Boot & Strapping Pin Traps (Do Not Pull Wrong!)
+
+#### ESP32 (WROOM / WROVER)
+| Pin | Default | Restriction / Trap |
+| :--- | :--- | :--- |
+| **GPIO 0** | Pull-up | Must be **HIGH** for normal boot. **LOW** enters UART Flashing mode. Avoid heavy capacitive loads. |
+| **GPIO 2** | Pull-down | Must be **LOW** or floating during flashing. Often connected to onboard LED. |
+| **GPIO 12 (MTDI)** | Pull-down | Sets flash voltage (`VDD_SDIO`). If pulled **HIGH** at boot, selects $1.8\text{ V}$ instead of $3.3\text{ V}$ $\to$ **bootloop / brownout!** |
+| **GPIO 15 (MTDO)** | Pull-up | If pulled **LOW** at boot, silences all UART0 bootROM log messages. |
+| **GPIO 34–39** | Floating | **Input-only pins!** No internal pull-ups/pull-downs, no PWM/output capability. |
+| **ADC2 Pins** | — | **Cannot be used** when Wi-Fi or Bluetooth driver is active (hardware conflict). Always use **ADC1** (`GPIO 32–39`). |
+
+#### STM32 (F1 / F4 Series)
+* **`BOOT0` Pin:** Never leave floating! Pull to **GND** via $10\text{ k}\Omega$ resistor for normal Flash execution. Floating `BOOT0` causes random hard-faults or failure to start on power-up.
+* **SWD Debugging (`PA13` / `SWDIO`, `PA14` / `SWCLK`):** Never repurpose these pins as general GPIO in `main()` without a startup delay, otherwise you will brick debugger access on the next flash attempt.
+
+---
+
+### 🛡️ Pre-Flight PCB & Schematic Design Checklist
+* [ ] **Decoupling Capacitors:** $100\text{ nF}$ ceramic (X7R/X5R) placed within $< 2\text{ mm}$ of *every* `VDD` pin, plus $4.7\text{ }\mu\text{F} - 10\text{ }\mu\text{F}$ bulk capacitor per IC.
+* [ ] **I2C Pull-ups:** External $2.2\text{ k}\Omega - 4.7\text{ k}\Omega$ resistors placed on `SDA` and `SCL` lines (internal MCU pull-ups of $\approx 40\text{ k}\Omega$ are too weak and cause signal ringing).
+* [ ] **Reverse Polarity Protection:** P-Channel MOSFET on the high side (low voltage drop compared to a Schottky diode).
+* [ ] **Inductive Loads (Relays / Motors / Solenoids):** Flyback diode (e.g., 1N4148 or 1N5819) placed in anti-parallel across the coil to clamp back-EMF voltage spikes ($V = -L \frac{dI}{dt}$).
+* [ ] **Op-Amp Unused Channels:** Never ground inputs directly! Configure unused channels as a **Voltage Follower** (`Output` tied to `-IN`, and `+IN` tied to mid-supply reference $\frac{V_{CC}}{2}$).
+
 ## 📐 3. Engineering Mathematics
 
 ### Infinite Series Convergence Tests
