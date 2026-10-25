@@ -168,7 +168,7 @@ $$F(\omega) = \int_{-\infty}^{\infty} f(t) e^{-j\omega t} \, dt$$
 
 $$F(s) = \mathcal{L}\{f(t)\} = \int_{0}^{\infty} f(t) e^{-st} \, dt, \quad s = \sigma + j\omega$$
 
-<details>
+<details markdown="1">
 <summary><b>Click to expand: Common Laplace Transform Pairs</b></summary>
 
 | Time Domain $f(t)$ ($t \ge 0$) | Laplace Domain $F(s)$ | Region of Convergence |
