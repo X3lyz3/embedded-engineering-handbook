@@ -26,6 +26,22 @@ jobs:
 
       - name: Prepare docs directory from README and subfolders
         run: |
+          mkdir -p docs/javascripts
+          cp README.md docs/index.md
+          if [ -d "pinouts" ]; then cp -r pinouts docs/; fi
+          cat << 'EOF' > docs/javascripts/katex.js
+          document$.subscribe(({ body }) => {
+            renderMathInElement(body, {
+              delimiters: [
+                { left: "$$",  right: "$$",  display: true },
+                { left: "$",   right: "$",   display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+              ],
+            })
+          })
+          EOF
+        run: |
           mkdir -p docs
           cp README.md docs/index.md
           if [ -d "pinouts" ]; then cp -r pinouts docs/; fi
