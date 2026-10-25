@@ -1,0 +1,19 @@
+* 2nd-Order Sallen-Key Low-Pass Filter (fc = 1 kHz, Butterworth Q = 0.707)
+* Compatible with Micro-Cap, LTspice, and ngspice
+
+* Input AC Signal Source (1V amplitude for Bode Plot)
+VIN IN 0 DC 0 AC 1
+
+* Filter Passive Network (fc = 1 / (2 * pi * R * sqrt(C1 * C2)))
+R1 IN N1 10k
+R2 N1 PLUS 10k
+C1 N1 OUT 22.5n
+C2 PLUS 0 11.25n
+
+* Ideal Single-Pole Op-Amp Subcircuit (Unity Gain Follower configuration)
+E_OPAMP OUT 0 VALUE = { LIMIT(1e5 * V(PLUS, OUT), -15, 15) }
+
+* AC Frequency Sweep: 100 points per decade from 10 Hz to 100 kHz
+.AC DEC 100 10 100k
+.PRINT AC VDB(OUT) VP(OUT)
+.END
