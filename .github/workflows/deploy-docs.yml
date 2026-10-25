@@ -21,6 +21,11 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Validate Python calculator script syntax and execution
+        run: |
+          python3 -m py_compile scripts/stm32_timer_calc.py
+          python3 scripts/stm32_timer_calc.py --clk 72000000 --freq 50 --bits 16
+
       - name: Install MkDocs Material
         run: pip install mkdocs-material
 
@@ -28,7 +33,9 @@ jobs:
         run: |
           mkdir -p docs/javascripts
           cp README.md docs/index.md
-          if [ -d "pinouts" ]; then cp -r pinouts docs/; fi
+          for dir in pinouts scripts simulations; do
+            if [ -d "$dir" ]; then cp -r "$dir" docs/; fi
+          done
           cat << 'EOF' > docs/javascripts/katex.js
           document$.subscribe(({ body }) => {
             renderMathInElement(body, {
@@ -42,5 +49,5 @@ jobs:
           })
           EOF
 
-      - name: Deploy to GitHub Pages
-        run: mkdocs gh-deploy --force
+      - name: Build and Deploy to GitHub Pages
+        run: mkdocs gh-deploy --force --strict
