@@ -1,7 +1,12 @@
-site_name: Embedded & Hardware Engineering Handbook
+site_name: Embedded Engineering Handbook
+site_description: Open-source reference handbook for embedded systems, analog electronics, STM32/ESP32 hardware traps, engineering math, and Linux debugging.
 site_url: https://x3lyz3.github.io/embedded-engineering-handbook/
 repo_url: https://github.com/X3lyz3/embedded-engineering-handbook
 repo_name: X3lyz3/embedded-engineering-handbook
+
+nav:
+  - Engineering Handbook: index.md
+  - ESP32 Family Comparison: pinouts/esp32_family_comparison.md
 
 theme:
   name: material
