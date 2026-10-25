@@ -14,7 +14,7 @@
 
 During schematic capture, firmware bring-up, or lab debugging, engineers repeatedly look up the same reference material across thousand-page datasheets and application notes: op-amp transfer functions, which ESP32 strapping pins trigger bootloops, why an STM32 timer runs at twice the expected APB clock, or which `picocom` and `udev` rules unlock a serial port.
 
-This repository consolidates verified formulas, hardware checklists, runnable scripts, and SPICE netlists into a single version-controlled reference free of marketing fluff or blurry raster images.
+This repository consolidates verified formulas, hardware checklists, runnable scripts, and SPICE netlists into a single version-controlled reference free of marketing fluff or blurry raster images. 
 
 ---
 
