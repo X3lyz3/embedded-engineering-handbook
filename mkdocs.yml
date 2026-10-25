@@ -27,6 +27,7 @@ theme:
     - content.code.copy
 
 markdown_extensions:
+  - md_in_html
   - tables
   - admonition
   - pymdownx.details
