@@ -17,7 +17,7 @@ Thank you for helping make this handbook a reliable, zero-fluff reference for ha
    * Use `$inline$` or `$$display$$` LaTeX for mathematical equations.
    * **LaTeX Compatibility Rule:** Never place raw underscores `_` inside `\text{...}` blocks (use subscripts like `\text{ADC}_{\text{raw}}`), and leave a blank line before and after every `$$` block and every Markdown list (`*`).
    * Use `mermaid` code blocks for state machines and flowcharts.
-   * Use plain Markdown text and standard Unicode symbols (`kΩ`, `μF`, `°C`) for simple numbers and units inside tables.
+   * Use plain Markdown text and standard Unicode symbols (`kΩ`, `μF`, `°C`) for simple numbers and units inside tables. 
 
 ## 3. Local Validation Before Submitting a Pull Request
 
