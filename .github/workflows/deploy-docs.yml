@@ -41,10 +41,6 @@ jobs:
             })
           })
           EOF
-        run: |
-          mkdir -p docs
-          cp README.md docs/index.md
-          if [ -d "pinouts" ]; then cp -r pinouts docs/; fi
 
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force
