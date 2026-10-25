@@ -4,7 +4,7 @@
 [![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](./CONTRIBUTING.md)
 
-> A practical, open-source engineering reference for embedded firmware developers, hardware engineers, and technical students. Covers analog signal conditioning, STM32 and ESP32 hardware design traps, engineering mathematics, Linux hardware debugging, and reproducible calculation tools—rendered natively with LaTeX and Mermaid diagrams.
+> A practical, open-source engineering reference for embedded firmware developers, hardware engineers, and technical students. Covers analog signal conditioning, STM32 and ESP32 hardware design traps, engineering mathematics, Linux hardware debugging, and reproducible calculation tools—rendered natively with LaTeX and Mermaid diagrams. 
 
 🌐 **Live Searchable Documentation:** [x3lyz3.github.io/embedded-engineering-handbook](https://x3lyz3.github.io/embedded-engineering-handbook/)
 
