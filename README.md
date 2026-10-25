@@ -43,14 +43,13 @@ ngspice -b simulations/sallen_key_lpf_1khz.cir
 
 ## 🧭 Table of Contents
 
-1. [Analog Electronics & Op-Amps](#-1-analog-electronics--op-amps)
-2. [Embedded Systems & Microcontrollers](#-2-embedded-systems--microcontrollers)
-3. [MCU Boot Traps & PCB Design Checklist](#-3-mcu-boot-traps--pcb-design-checklist)
-4. [Engineering Mathematics](#-4-engineering-mathematics)
-5. [Linux CLI & Hardware Debugging](#-5-linux-cli--hardware-debugging)
-6. [IoT Telemetry SQL Patterns](#-6-iot-telemetry-sql-patterns)
-7. [Fixed-Point Audio Synthesis (Bytebeat)](#-7-fixed-point-audio-synthesis-bytebeat)
-
+1. [Analog Electronics & Op-Amps](#1-analog-electronics--op-amps)
+2. [Embedded Systems & Microcontrollers](#2-embedded-systems--microcontrollers)
+3. [MCU Boot Traps & PCB Design Checklist](#3-mcu-boot-traps--pcb-design-checklist)
+4. [Engineering Mathematics](#4-engineering-mathematics)
+5. [Linux CLI & Hardware Debugging](#5-linux-cli--hardware-debugging)
+6. [IoT Telemetry SQL Patterns](#6-iot-telemetry-sql-patterns)
+7. [Fixed-Point Audio Synthesis (Bytebeat)](#7-fixed-point-audio-synthesis-bytebeat)
 ---
 
 ## 🔌 1. Analog Electronics & Op-Amps
