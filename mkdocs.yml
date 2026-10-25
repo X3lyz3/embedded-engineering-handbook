@@ -27,8 +27,8 @@ theme:
     - content.code.copy
 
 markdown_extensions:
-  - md_in_html
   - tables
+  - md_in_html
   - admonition
   - pymdownx.details
   - pymdownx.arithmatex:
@@ -42,4 +42,9 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 extra_javascript:
-  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+  - javascripts/katex.js
+  - https://unpkg.com/katex@0/dist/katex.min.js
+  - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+
+extra_css:
+  - https://unpkg.com/katex@0/dist/katex.min.css
