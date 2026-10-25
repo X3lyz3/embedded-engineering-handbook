@@ -1,19 +1,25 @@
-* 2nd-Order Sallen-Key Low-Pass Filter (fc = 1 kHz, Butterworth Q = 0.707)
-* Compatible with Micro-Cap, LTspice, and ngspice
+* 2nd-Order Unity-Gain Sallen-Key Low-Pass Filter (fc = 1 kHz, Butterworth Q = 0.7071)
+* Standard SPICE-3f5 syntax compatible with ngspice, LTspice, Micro-Cap, and Xyce
+* Run in batch mode: ngspice -b simulations/sallen_key_lpf_1khz.cir
 
-* Input AC Signal Source (1V amplitude for Bode Plot)
+* Input AC Signal Source (1 V AC amplitude for small-signal Bode plot)
 VIN IN 0 DC 0 AC 1
 
-* Filter Passive Network (fc = 1 / (2 * pi * R * sqrt(C1 * C2)))
+* Passive Filter Network
+* Theoretical exact Butterworth values for R1 = R2 = 10 kOhm:
+*   C1 = 22.508 nF, C2 = 11.254 nF  -> fc = 1000.0 Hz, Q = 0.7071
+* Practical E24 standard values alternative:
+*   R1 = 10k, R2 = 11k, C1 = 22n, C2 = 10n -> fc = 1023.5 Hz, Q = 0.705
 R1 IN N1 10k
 R2 N1 PLUS 10k
 C1 N1 OUT 22.5n
 C2 PLUS 0 11.25n
 
-* Ideal Single-Pole Op-Amp Subcircuit (Unity Gain Follower configuration)
-E_OPAMP OUT 0 VALUE = { LIMIT(1e5 * V(PLUS, OUT), -15, 15) }
+* Ideal Op-Amp Macro (High open-loop differential gain A_OL = 100 dB = 1e5, connected as Follower)
+E_OPAMP OUT 0 PLUS OUT 1e5
+ROUT OUT 0 10Meg
 
-* AC Frequency Sweep: 100 points per decade from 10 Hz to 100 kHz
+* Small-Signal AC Sweep: 100 points per decade from 10 Hz to 100 kHz
 .AC DEC 100 10 100k
 .PRINT AC VDB(OUT) VP(OUT)
 .END
