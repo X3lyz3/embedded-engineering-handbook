@@ -1,21 +1,32 @@
-# ⚡ Systems & Hardware Engineering Cheatsheet
+# ⚡ Systems & Hardware Engineering Handbook
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 [![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/X3lyz3/embedded-engineering-handbook)
 
-> A high-density, zero-fluff reference guide for Embedded Systems, Analog/Digital Electronics, Engineering Math, and Linux System Administration. Built with native GitHub LaTeX and Mermaid diagrams.
+> A high-density, zero-fluff reference guide for Embedded Systems, Analog/Digital Electronics, PCB Design, Engineering Math, and Linux System Administration. Rendered natively with GitHub LaTeX and Mermaid diagrams.
+
+🌐 **Live Searchable Documentation:** [x3lyz3.github.io/embedded-engineering-handbook](https://x3lyz3.github.io/embedded-engineering-handbook/)
+
+---
+
+## 📂 Repository Structure
+* 📄 **`README.md`** — Core engineering formulas, tables, and quick-reference diagrams.
+* 🐍 **[`/scripts`](./scripts)** — Standalone calculation utilities (e.g., exact STM32 `PSC`/`ARR` timer register solver).
+* 📌 **[`/pinouts`](./pinouts)** — Hardware architecture comparisons and native USB/GPIO pinout tables.
+* 📈 **[`/simulations`](./simulations)** — Ready-to-run SPICE netlists (`.cir`) for Micro-Cap, LTspice, and ngspice.
 
 ---
 
 ## 🧭 Table of Contents
 1. [Analog Electronics & Op-Amps](#-1-analog-electronics--op-amps)
 2. [Embedded Systems & Microcontrollers](#-2-embedded-systems--microcontrollers)
-3. [Engineering Mathematics](#-3-engineering-mathematics)
-4. [Linux CLI & Systems Debugging](#-4-linux-cli--systems-debugging)
-5. [SQL & Time-Series Data](#-5-sql--time-series-data)
-6. [Bonus: Bytebeat & Algorithmic Audio](#-6-bonus-bytebeat--algorithmic-audio)
+3. [MCU Boot Traps & PCB Design Checklist](#-3-mcu-boot-traps--pcb-design-checklist)
+4. [Engineering Mathematics](#-4-engineering-mathematics)
+5. [Linux CLI & Hardware Debugging](#-5-linux-cli--hardware-debugging)
+6. [SQL & Time-Series Telemetry](#-6-sql--time-series-telemetry)
+7. [Bonus: Bytebeat & Algorithmic Audio](#-7-bonus-bytebeat--algorithmic-audio)
 
 ---
 
@@ -24,7 +35,7 @@
 ### Passive RC / RL Filters
 * **Capacitive Reactance:** $X_C = \frac{1}{2\pi f C}$
 * **Inductive Reactance:** $X_L = 2\pi f L$
-* **Cutoff Frequency ($-3\text{ dB}$ point):**
+* **Cutoff Frequency ($-3\text{ dB}$ half-power point):**
 
 $$f_c = \frac{1}{2\pi R C} = \frac{R}{2\pi L}$$
 
@@ -38,9 +49,9 @@ $$f_c = \frac{1}{2\pi R C} = \frac{R}{2\pi L}$$
 | **Inverting** | $V_{out} = -V_{in} \left(\frac{R_f}{R_{in}}\right)$ | $R_{in}$ | Phase inversion, current-to-voltage |
 | **Non-Inverting** | $V_{out} = V_{in} \left(1 + \frac{R_f}{R_g}\right)$ | $\infty$ (Ideal) | High-impedance signal amplification |
 | **Differential** | $V_{out} = \frac{R_f}{R_{in}}(V_2 - V_1)$ | $R_{in}$ | Shunt current sensing, noise rejection |
-| **Integrator** | $V_{out}(t) = -\frac{1}{RC} \int_0^t V_{in}(\tau) d\tau$ | $R$ | Wave shaping (Square $\to$ Triangle), PID |
+| **Integrator** | $V_{out}(t) = -\frac{1}{RC} \int_0^t V_{in}(\tau) \, d\tau$ | $R$ | Wave shaping (Square $\to$ Triangle), PID |
 
-### BJT Transistor Regions (NPN)
+### BJT Transistor Operating Regions (NPN)
 ```mermaid
 flowchart LR
     A[Base-Emitter Junction] --> B{V_BE > 0.7V?}
@@ -49,14 +60,14 @@ flowchart LR
     D -->|Reverse Biased: V_CE > V_BE| E[Active Region: Linear Amplifier]
     D -->|Forward Biased: V_CE ≈ 0.2V| F[Saturation: Fully ON Switch]
 ```
-* **Collector Current (Active):** $I_C = \beta I_B = I_S \left( e^{\frac{V_{BE}}{V_T}} - 1 \right)$, where thermal voltage $V_T = \frac{kT}{q} \approx 25.85\text{ mV}$ at $300\text{ K}$.
+* **Collector Current (Active Region):** $I_C = \beta I_B = I_S \left( e^{\frac{V_{BE}}{V_T}} - 1 \right)$, where thermal voltage $V_T = \frac{kT}{q} \approx 25.85\text{ mV}$ at $300\text{ K}$.
 
 ---
 
 ## 🎛️ 2. Embedded Systems & Microcontrollers
 
 ### Bitwise Manipulation Macros (C / C++)
-Essential register operations without touching adjacent bits:
+Essential register operations without corrupting adjacent bits:
 
 ```c
 #define BIT_SET(REG, BIT)     ((REG) |= (1ULL << (BIT)))
@@ -81,12 +92,12 @@ Standard hobby servos (e.g., SG90, MG996R) expect a $50\text{ Hz}$ PWM signal ($
 
 **Timer Prescaler & Period Formula (STM32):**
 
-$$f_{PWM} = \frac{f_{TIM\_CLK}}{(PSC + 1) \cdot (ARR + 1)}$$
+$$f_{PWM} = \frac{f_{\text{TIM}}}{(\text{PSC} + 1) \cdot (\text{ARR} + 1)}$$
 
 ### ADC Quantization & Resolution
 For an $N$-bit ADC with reference voltage $V_{ref}$:
 
-$$\text{LSB} = \frac{V_{ref}}{2^N - 1}, \quad V_{measured} = \text{ADC\_RAW} \times \frac{V_{ref}}{2^N - 1}$$
+$$\text{LSB} = \frac{V_{ref}}{2^N - 1}, \quad V_{measured} = \text{ADC}_{\text{raw}} \times \frac{V_{ref}}{2^N - 1}$$
 
 * **Signal-to-Noise Ratio (Ideal ADC):** $\text{SNR}_{\text{dB}} = 6.02 \cdot N + 1.76$
 
@@ -104,35 +115,36 @@ stateDiagram-v2
 
 ---
 
-### ⚠️ MCU Boot & Strapping Pin Traps (Do Not Pull Wrong!)
+## ⚠️ 3. MCU Boot Traps & PCB Design Checklist
 
-#### ESP32 (WROOM / WROVER)
-| Pin | Default | Restriction / Trap |
+### ESP32 (WROOM / WROVER) Strapping & Restricted Pins
+| Pin | Default | Restriction / Hardware Trap |
 | :--- | :--- | :--- |
 | **GPIO 0** | Pull-up | Must be **HIGH** for normal boot. **LOW** enters UART Flashing mode. Avoid heavy capacitive loads. |
 | **GPIO 2** | Pull-down | Must be **LOW** or floating during flashing. Often connected to onboard LED. |
-| **GPIO 12 (MTDI)** | Pull-down | Sets flash voltage (`VDD_SDIO`). If pulled **HIGH** at boot, selects $1.8\text{ V}$ instead of $3.3\text{ V}$ $\to$ **bootloop / brownout!** |
-| **GPIO 15 (MTDO)** | Pull-up | If pulled **LOW** at boot, silences all UART0 bootROM log messages. |
-| **GPIO 34–39** | Floating | **Input-only pins!** No internal pull-ups/pull-downs, no PWM/output capability. |
+| **GPIO 12 (MTDI)** | Pull-down | Sets internal flash voltage (`VDD_SDIO`). If pulled **HIGH** at boot, selects $1.8\text{ V}$ instead of $3.3\text{ V}$ $\to$ **bootloop / brownout!** |
+| **GPIO 15 (MTDO)** | Pull-up | If pulled **LOW** at boot, silences all UART0 bootROM diagnostic log messages. |
+| **GPIO 6–11** | — | **Connected to internal SPI Flash.** Never use for general I/O (triggers immediate crash). |
+| **GPIO 34–39** | Floating | **Input-only pins!** No internal pull-ups/pull-downs, no PWM or output drive capability. |
 | **ADC2 Pins** | — | **Cannot be used** when Wi-Fi or Bluetooth driver is active (hardware conflict). Always use **ADC1** (`GPIO 32–39`). |
 
-#### STM32 (F1 / F4 Series)
-* **`BOOT0` Pin:** Never leave floating! Pull to **GND** via $10\text{ k}\Omega$ resistor for normal Flash execution. Floating `BOOT0` causes random hard-faults or failure to start on power-up.
-* **SWD Debugging (`PA13` / `SWDIO`, `PA14` / `SWCLK`):** Never repurpose these pins as general GPIO in `main()` without a startup delay, otherwise you will brick debugger access on the next flash attempt.
+### STM32 (F1 / F4 Series) Hardware Traps
+* **`BOOT0` Pin:** Never leave floating! Pull to **GND** via a $10\text{ k}\Omega$ resistor for normal Flash execution. A floating `BOOT0` pin causes random hard-faults or failure to boot on power-up.
+* **SWD Debugging (`PA13` / `SWDIO`, `PA14` / `SWCLK`):** Never repurpose these pins as general GPIO inside `main()` without a startup delay, otherwise you will brick SWD debugger access on the next flash attempt.
+
+### 🛡️ Pre-Flight PCB & Schematic Design Checklist
+* [ ] **Decoupling Capacitors:** $100\text{ nF}$ ceramic (X7R/X5R) placed within $< 2\text{ mm}$ of *every* `VDD` pin, plus $4.7\text{ }\mu\text{F} - 10\text{ }\mu\text{F}$ bulk capacitor per IC power rail.
+* [ ] **I2C Pull-ups:** External $2.2\text{ k}\Omega - 4.7\text{ k}\Omega$ resistors placed on `SDA` and `SCL` lines (internal MCU pull-ups of $\approx 40\text{ k}\Omega$ are too weak and cause severe signal rise-time distortion).
+* [ ] **Reverse Polarity Protection:** P-Channel MOSFET on the high side (ultra-low voltage drop compared to a series Schottky diode).
+* [ ] **Inductive Loads (Relays / Motors / Solenoids):** Flyback diode (e.g., 1N4148 or 1N5819) placed in anti-parallel across the coil to clamp back-EMF voltage spikes ($V = -L \frac{dI}{dt}$).
+* [ ] **Op-Amp Unused Channels:** Never ground inputs directly! Configure unused channels as a **Voltage Follower** (`Output` tied to `-IN`, and `+IN` tied to a mid-supply reference $\frac{V_{CC}}{2}$).
 
 ---
 
-### 🛡️ Pre-Flight PCB & Schematic Design Checklist
-* [ ] **Decoupling Capacitors:** $100\text{ nF}$ ceramic (X7R/X5R) placed within $< 2\text{ mm}$ of *every* `VDD` pin, plus $4.7\text{ }\mu\text{F} - 10\text{ }\mu\text{F}$ bulk capacitor per IC.
-* [ ] **I2C Pull-ups:** External $2.2\text{ k}\Omega - 4.7\text{ k}\Omega$ resistors placed on `SDA` and `SCL` lines (internal MCU pull-ups of $\approx 40\text{ k}\Omega$ are too weak and cause signal ringing).
-* [ ] **Reverse Polarity Protection:** P-Channel MOSFET on the high side (low voltage drop compared to a Schottky diode).
-* [ ] **Inductive Loads (Relays / Motors / Solenoids):** Flyback diode (e.g., 1N4148 or 1N5819) placed in anti-parallel across the coil to clamp back-EMF voltage spikes ($V = -L \frac{dI}{dt}$).
-* [ ] **Op-Amp Unused Channels:** Never ground inputs directly! Configure unused channels as a **Voltage Follower** (`Output` tied to `-IN`, and `+IN` tied to mid-supply reference $\frac{V_{CC}}{2}$).
-
-## 📐 3. Engineering Mathematics
+## 📐 4. Engineering Mathematics
 
 ### Infinite Series Convergence Tests
-Given a series $\sum_{n=1}^{\infty} a_n$:
+Given an infinite series $\sum_{n=1}^{\infty} a_n$:
 
 ```mermaid
 flowchart TD
@@ -167,23 +179,23 @@ $$F(s) = \mathcal{L}\{f(t)\} = \int_{0}^{\infty} f(t) e^{-st} \, dt, \quad s = \
 | Exponential Decay $e^{-at}$ | $\frac{1}{s + a}$ | $\text{Re}(s) > -a$ |
 | Sine Wave $\sin(\omega t)$ | $\frac{\omega}{s^2 + \omega^2}$ | $\text{Re}(s) > 0$ |
 | Cosine Wave $\cos(\omega t)$ | $\frac{s}{s^2 + \omega^2}$ | $\text{Re}(s) > 0$ |
-| Derivative $\frac{df(t)}{dt}$ | $sF(s) - f(0^-)$ | — |
+| First Derivative $\frac{df(t)}{dt}$ | $sF(s) - f(0^-)$ | — |
 
 </details>
 
 ---
 
-## 🐧 4. Linux CLI & Systems Debugging (Fedora / RHEL / Debian)
+## 🐧 5. Linux CLI & Hardware Debugging (Fedora / RHEL / Debian)
 
 ### Hardware & Serial Debugging
 ```bash
-# List all USB devices and bus tree
+# List all USB devices and bus hierarchy tree
 lsusb && lsusb -t
 
 # Watch kernel ring buffer in real-time (catch USB/Serial plug events)
 dmesg -wH
 
-# Connect to UART serial port at 115200 baud (using picocom or minicom)
+# Connect to UART serial port at 115200 baud (using picocom)
 picocom -b 115200 /dev/ttyUSB0
 
 # Grant current user access to serial ports without sudo (re-login required)
@@ -198,19 +210,19 @@ arm-none-eabi-size firmware.elf
 # Find which process is holding a specific port (e.g., 8080)
 sudo ss -tulpn | grep :8080
 
-# Analyze boot performance and slow services
+# Analyze system boot performance and slow services
 systemd-analyze blame
 
-# Follow logs of a specific background service
+# Follow live logs of a specific background service
 journalctl -u nginx.service -f
 
-# Check open files / serial locks by process
+# Check which process locked a serial port
 lsof /dev/ttyUSB0
 ```
 
 ### DNF Package Management (Fedora / RHEL)
 ```bash
-# Find which package provides a missing library or binary
+# Find which package provides a missing shared library or binary
 dnf provides "*/libGL.so.1"
 
 # View transaction history and rollback a broken update
@@ -220,7 +232,7 @@ sudo dnf history undo <ID>
 
 ---
 
-## 🗄️ 5. SQL & Time-Series Data
+## 🗄️ 6. SQL & Time-Series Telemetry
 
 ### Execution Order vs. Lexical Order
 SQL queries are **not** executed in the order they are written:
@@ -256,13 +268,13 @@ WHERE recorded_at >= NOW() - INTERVAL '24 hours';
 
 ---
 
-## 🎵 6. Bonus: Bytebeat & Algorithmic Audio
+## 🎵 7. Bonus: Bytebeat & Algorithmic Audio
 
 1-line C expressions evaluated at sample rate $f_s = 8000\text{ Hz}$, where `t` is a monotonically increasing integer (`uint32_t t = 0, 1, 2...`), outputting an 8-bit unsigned PCM waveform (`0..255`).
 
 * **Frequency Conversion:** To generate a tone of frequency $f_{\text{Hz}}$ at sample rate $f_s$:
 
-$$\text{Step per increment} = \frac{256 \cdot f_{\text{Hz}}}{f_s}$$
+$$\text{Step} = \frac{256 \cdot f_{\text{Hz}}}{f_s}$$
 
 * **Classic 42 Melody:**
   ```c
@@ -282,7 +294,7 @@ $$\text{Step per increment} = \frac{256 \cdot f_{\text{Hz}}}{f_s}$$
 ## 🤝 Contributing
 Contributions, corrections, and new engineering formulas are welcome!
 1. Fork the repository.
-2. Ensure all math uses native `$inline$` or `$$block$$` LaTeX syntax (no external images).
+2. Ensure all math uses native `$inline$` or `$$block$$` LaTeX syntax (avoid underscores inside `\text{...}` blocks).
 3. Ensure all diagrams use native `mermaid` code blocks.
 4. Submit a Pull Request.
 
