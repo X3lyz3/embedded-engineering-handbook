@@ -33,6 +33,8 @@ jobs:
         run: |
           mkdir -p docs/javascripts
           cp README.md docs/index.md
+          if [ -f "CONTRIBUTING.md" ]; then cp CONTRIBUTING.md docs/; fi
+          if [ -f "LICENSE" ]; then cp LICENSE docs/; fi
           for dir in pinouts scripts simulations; do
             if [ -d "$dir" ]; then cp -r "$dir" docs/; fi
           done
