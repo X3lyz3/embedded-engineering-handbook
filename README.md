@@ -1,4 +1,4 @@
-# ⚡ Embedded Engineering Handbook
+#  Embedded Engineering Handbook
 
 [![Deploy Docs](https://github.com/X3lyz3/embedded-engineering-handbook/actions/workflows/deploy-docs.yml/badge.svg)](https://github.com/X3lyz3/embedded-engineering-handbook/actions/workflows/deploy-docs.yml)
 [![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
@@ -6,11 +6,11 @@
 
 > A practical, open-source engineering reference for embedded firmware developers, hardware engineers, and technical students. Covers analog signal conditioning, STM32 and ESP32 hardware design traps, engineering mathematics, Linux hardware debugging, and reproducible calculation tools—rendered natively with LaTeX and Mermaid diagrams.  
 
-🌐 **Live Searchable Documentation:** [x3lyz3.github.io/embedded-engineering-handbook](https://x3lyz3.github.io/embedded-engineering-handbook/)
+**Live Searchable Documentation:** [x3lyz3.github.io/embedded-engineering-handbook](https://x3lyz3.github.io/embedded-engineering-handbook/)
 
 ---
 
-## 🎯 Why This Handbook Exists
+## Why This Handbook Exists
 
 During schematic capture, firmware bring-up, or lab debugging, engineers repeatedly look up the same reference material across thousand-page datasheets and application notes: op-amp transfer functions, which ESP32 strapping pins trigger bootloops, why an STM32 timer runs at twice the expected APB clock, or which `picocom` and `udev` rules unlock a serial port.
 
@@ -18,12 +18,12 @@ This repository consolidates verified formulas, hardware checklists, runnable sc
 
 ---
 
-## 📂 Repository Contents & Included Tools
+## Repository Contents & Included Tools
 
-* 📄 **`README.md`** — Core engineering reference tables, transfer functions, state machines, and hardware design checklists.
-* 📌 **[`pinouts/esp32_family_comparison.md`](https://github.com/X3lyz3/embedded-engineering-handbook/blob/main/pinouts/esp32_family_comparison.md)** — Architecture, memory, radio, usable GPIO count, and native USB D+/D- pinout comparison across ESP32, S2, S3, C3, and C6.
-* 🐍 **[`scripts/stm32_timer_calc.py`](https://github.com/X3lyz3/embedded-engineering-handbook/blob/main/scripts/stm32_timer_calc.py)** — Dependency-free Python CLI tool that calculates optimal integer `PSC` and `ARR` register pairs for 16-bit and 32-bit STM32 timers, including PWM duty-cycle resolution in bits.
-* 📈 **[`simulations/sallen_key_lpf_1khz.cir`](https://github.com/X3lyz3/embedded-engineering-handbook/blob/main/simulations/sallen_key_lpf_1khz.cir)** — Standard SPICE-3f5 netlist for a 2nd-order Butterworth Sallen-Key low-pass filter ($f_c = 1\text{ kHz}$), compatible with ngspice, LTspice, and Micro-Cap.
+* **`README.md`** — Core engineering reference tables, transfer functions, state machines, and hardware design checklists.
+* **[`pinouts/esp32_family_comparison.md`](https://github.com/X3lyz3/embedded-engineering-handbook/blob/main/pinouts/esp32_family_comparison.md)** — Architecture, memory, radio, usable GPIO count, and native USB D+/D- pinout comparison across ESP32, S2, S3, C3, and C6.
+* **[`scripts/stm32_timer_calc.py`](https://github.com/X3lyz3/embedded-engineering-handbook/blob/main/scripts/stm32_timer_calc.py)** — Dependency-free Python CLI tool that calculates optimal integer `PSC` and `ARR` register pairs for 16-bit and 32-bit STM32 timers, including PWM duty-cycle resolution in bits.
+* **[`simulations/sallen_key_lpf_1khz.cir`](https://github.com/X3lyz3/embedded-engineering-handbook/blob/main/simulations/sallen_key_lpf_1khz.cir)** — Standard SPICE-3f5 netlist for a 2nd-order Butterworth Sallen-Key low-pass filter ($f_c = 1\text{ kHz}$), compatible with ngspice, LTspice, and Micro-Cap.
 
 ### Quick Start: Running Included Tools Locally
 
@@ -41,7 +41,7 @@ ngspice -b simulations/sallen_key_lpf_1khz.cir
 
 ---
 
-## 🧭 Table of Contents
+## Table of Contents
 
 1. [Analog Electronics & Op-Amps](#1-analog-electronics--op-amps)
 2. [Embedded Systems & Microcontrollers](#2-embedded-systems--microcontrollers)
@@ -52,7 +52,7 @@ ngspice -b simulations/sallen_key_lpf_1khz.cir
 7. [Fixed-Point Audio Synthesis (Bytebeat)](#7-fixed-point-audio-synthesis-bytebeat)
 ---
 
-## 🔌 1. Analog Electronics & Op-Amps
+## 1. Analog Electronics & Op-Amps
 
 ### Passive First-Order RC / RL Filters
 
@@ -96,7 +96,7 @@ flowchart LR
 
 ---
 
-## 🎛️ 2. Embedded Systems & Microcontrollers
+## 2. Embedded Systems & Microcontrollers
 
 ### Bitwise Register Manipulation Macros (C99 / C11)
 
@@ -132,7 +132,7 @@ $$
 f_{PWM} = \frac{f_{\text{TIM}}}{(\text{PSC} + 1) \cdot (\text{ARR} + 1)}, \quad \text{Duty Cycle (\%)} = \frac{\text{CCR}}{\text{ARR} + 1} \times 100
 $$
 
-> **⚠️ STM32 APB Timer Clock Multiplier Rule (ST RM0008 / RM0090):** On STM32 microcontrollers, if the APB bus prescaler (`PPRE1` or `PPRE2`) is set to **1**, then $f_{\text{TIM}} = f_{\text{PCLK}}$. If the APB prescaler is set to **any value $> 1$** (e.g., `/2`, `/4`), hardware automatically doubles the clock fed to the timers: $f_{\text{TIM}} = 2 \times f_{\text{PCLK}}$.
+> ** STM32 APB Timer Clock Multiplier Rule (ST RM0008 / RM0090):** On STM32 microcontrollers, if the APB bus prescaler (`PPRE1` or `PPRE2`) is set to **1**, then $f_{\text{TIM}} = f_{\text{PCLK}}$. If the APB prescaler is set to **any value $> 1$** (e.g., `/2`, `/4`), hardware automatically doubles the clock fed to the timers: $f_{\text{TIM}} = 2 \times f_{\text{PCLK}}$.
 
 ### ADC Quantization, Scaling & Hardware Limitations
 
@@ -167,7 +167,7 @@ stateDiagram-v2
 
 ---
 
-## ⚠️ 3. MCU Boot Traps & PCB Design Checklist
+## 3. MCU Boot Traps & PCB Design Checklist
 
 ### ESP32 (ESP32-WROOM-32 / WROVER) Strapping & Restricted Pins
 
@@ -190,7 +190,7 @@ stateDiagram-v2
 * **STM32F103 JTAG Pin Hijack (`PA15`, `PB3`, `PB4`):** On STM32F1 series, full 5-wire JTAG + SWD is enabled at reset by default, hijacking `PA15` (`JTDI`), `PB3` (`JTDO`), and `PB4` (`NJTRST`). To use them as standard GPIOs while keeping SWD debugging active, explicitly disable JTAG in `AFIO_MAPR` (`__HAL_AFIO_REMAP_SWJ_NOJTAG()`).
 * **5V Tolerance (`FT` Pins):** Only pins marked **`FT`** (Five-volt Tolerant) in the STM32 datasheet pin definition table can accept 5 V digital inputs while running at $V_{DD} = 3.3\text{ V}$. Pins hooked to the ADC or oscillator (`TT` / `TC`) are strictly limited to $V_{DD} + 0.3\text{ V}$; furthermore, never enable the internal pull-up resistor on an `FT` pin driven by 5 V, or current will back-feed into the 3.3 V rail!
 
-### 🛡️ Pre-Flight PCB & Schematic Design Checklist
+### Pre-Flight PCB & Schematic Design Checklist
 
 * [ ] **Decoupling Capacitors:** Place a 100 nF ceramic capacitor (X7R/X5R) within < 2 mm of *every* `VDD`/`VCC` pin with a direct via to the ground plane, plus a 4.7 μF – 10 μF bulk capacitor per IC power domain.
 * [ ] **Analog Reference Filtering (`VDDA` / `VREF+`):** Decouple `VDDA` separately from digital `VDD` using a 100 nF + 1 μF ceramic pair (and optional ferrite bead) to keep digital switching noise out of the ADC.
@@ -201,7 +201,7 @@ stateDiagram-v2
 
 ---
 
-## 📐 4. Engineering Mathematics
+## 4. Engineering Mathematics
 
 ### Infinite Series Convergence Tests
 
@@ -248,7 +248,7 @@ $$
 
 ---
 
-## 🐧 5. Linux CLI & Hardware Debugging (Fedora / RHEL / Debian)
+## 5. Linux CLI & Hardware Debugging (Fedora / RHEL / Debian)
 
 ### USB, UART & ELF Binary Inspection
 
@@ -299,7 +299,7 @@ sudo dnf history undo <TRANSACTION_ID>
 
 ---
 
-## 🗄️ 6. IoT Telemetry SQL Patterns
+## 6. IoT Telemetry SQL Patterns
 
 When logging embedded sensor telemetry to relational or time-series databases (PostgreSQL / TimescaleDB / SQLite), use window functions to compute moving averages and state deltas without collapsing rows.
 
@@ -338,7 +338,7 @@ WHERE recorded_at >= CURRENT_TIMESTAMP - INTERVAL '24 hours';
 
 ---
 
-## 🎵 7. Fixed-Point Audio Synthesis (Bytebeat)
+## 7. Fixed-Point Audio Synthesis (Bytebeat)
 
 Single-line integer arithmetic expressions evaluated at sample rate $f_s = 8000\text{ Hz}$, where `t` is an incrementing sample counter (`uint32_t t = 0, 1, 2...`), outputting an 8-bit unsigned PCM waveform (`0..255`) for DAC or PWM output on resource-constrained MCUs without an FPU.
 
@@ -359,7 +359,7 @@ $$
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Found a datasheet discrepancy, an edge case in a formula, or want to add a new MCU family reference or SPICE model? Contributions are highly appreciated!
 
